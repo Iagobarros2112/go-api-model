@@ -9,16 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//estrutura das chamadas productController
 type productController struct {
 	productUseCase usecase.ProductUsecase
 }
 
+//funçao productcontroller
 func NewProductController(usecase usecase.ProductUsecase) productController {
 	return productController{
 		productUseCase: usecase,
 	}
 }
 
+funçao listar todos os produtos
 func (p *productController) GetProducts(ctx *gin.Context) {
 
 	products, err := p.productUseCase.GetProducts()
@@ -30,6 +33,7 @@ func (p *productController) GetProducts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, products)
 }
 
+//funcao criar um produto
 func (p *productController) CreateProduct(ctx *gin.Context) {
 
 	var product model.Product
@@ -49,6 +53,7 @@ func (p *productController) CreateProduct(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, insertedProduct)
 }
 
+//achar um produto
 func (p *productController) GetProductById(ctx *gin.Context) {
 
 	id := ctx.Param("productId")
@@ -81,6 +86,18 @@ func (p *productController) GetProductById(ctx *gin.Context) {
 		}
 		ctx.JSON(http.StatusNotFound, response)
 		return
+	}
+
+//deletar um produto
+	func (p *productController) DeleteProduct(ctx *gin.Context) {
+
+		products, err := p.productUseCase.DeleteProduct()
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+	
+		ctx.JSON(http.StatusOK, products)
 	}
 
 	ctx.JSON(http.StatusOK, product)

@@ -6,16 +6,19 @@ import (
 	"go-api/model"
 )
 
+//tipo basico repositorio
 type ProductRepository struct {
 	connection *sql.DB
 }
 
+//funcao repositorio
 func NewProductRepository(connection *sql.DB) ProductRepository {
 	return ProductRepository{
 		connection: connection,
 	}
 }
 
+//funcao buscar todos os produtos
 func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
 
 	query := "SELECT id, product_name, price FROM product"
@@ -47,6 +50,7 @@ func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
 	return productList, nil
 }
 
+//funcao criar um produto
 func (pr *ProductRepository) CreateProduct(product model.Product) (int, error) {
 
 	var id int
@@ -68,6 +72,7 @@ func (pr *ProductRepository) CreateProduct(product model.Product) (int, error) {
 	return id, nil
 }
 
+//funçao achar um produto
 func (pr *ProductRepository) GetProductById(id_product int) (*model.Product, error) {
 
 	query, err := pr.connection.Prepare("SELECT * FROM product WHERE id = $1")
@@ -94,4 +99,19 @@ func (pr *ProductRepository) GetProductById(id_product int) (*model.Product, err
 
 	query.Close()
 	return &produto, nil
+}
+
+//funcao deletar um produto
+func (pr *ProductRepository) GetProductById(id_product int) (*model.Product, error) {
+     
+	//query para eu achar tal produto
+	query, err := pr.connection.Prepare("DELETE * FROM product WHERE id = $1")
+	//se nao achar mostre um erro
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+   
+	
+	
 }
